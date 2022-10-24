@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="content">
+            <block name="Voronin_Cars" template="Voronin_Cars::add.phtml">
+                <arguments>
+                    <argument name="view_model_edit" xsi:type="object">Voronin\Cars\ViewModel\CarsEdit</argument>
+                </arguments>
+            </block>
+        </referenceContainer>
+    </body>
+</page>

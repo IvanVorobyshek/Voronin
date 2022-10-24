@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="voronin_cars_category_listing_data_source" xsi:type="string">VoroninCarsCategoryCollection</item>
+            </argument>
+        </arguments>
+    </type>
+    <virtualType name="VoroninCarsCategoryCollection" type="Voronin\Cars\Ui\DataProvider\Category\Listing\Collection">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">cars</argument>
+            <argument name="resourceModel" xsi:type="string">Voronin\Cars\Model\ResourceModel\Cars</argument>
+        </arguments>
+    </virtualType>
+    <preference for="Voronin\Cars\Api\Data\CarInterface"
+                type="Voronin\Cars\Model\Cars"/>
+    <preference for="Voronin\Cars\Api\CarRepositoryInterface"
+                type="Voronin\Cars\Model\CarsRepository"/>
+    <preference for="Voronin\Cars\Api\Data\CarSearchResultInterface"
+                type="Magento\Framework\Api\SearchResults" />
+</config>

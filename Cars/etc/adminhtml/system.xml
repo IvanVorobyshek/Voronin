@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="Voronin_Cars" translate="label" sortOrder="1">
+            <label>Voronin Cars</label>
+        </tab>
+
+        <section id="Voronin_Cars_General" showInDefault="1" showInWebsite="1" showInStore="1" sortOrder="10"
+                 translate="label">
+            <label>General</label>
+            <tab>Voronin_Cars</tab>
+            <resource>Voronin_Cars::general</resource>
+
+            <group id="Voronin_Cars_Module" translate="label" sortOrder="10" showInDefault="1" showInWebsite="1"
+                   showInStore="1">
+                <label>Cars module</label>
+                <comment>You can enable/disable the module.</comment>
+
+                <field id="Voronin_Cars_Is_Enabled" translate="label" sortOrder="10" showInDefault="1" showInWebsite="1"
+                       showInStore="1" type="select">
+                    <label>Is enabled</label>
+                    <comment>Select Yes or No.</comment>
+                    <tooltip>Select Yes to enable the module, No to disable.</tooltip>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+
+            </group>
+        </section>
+    </system>
+</config>

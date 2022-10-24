@@ -1,0 +1,81 @@
+<?php
+/** @var \Voronin\Cars\Block\Template $block */
+/** @var $viewModelCarsEdit \Voronin\Cars\ViewModel\CarsEdit */
+$viewModelCarsEdit = $block->getViewModelEdit();
+$car = $viewModelCarsEdit->getOutData();
+$car ? $id = $car->getId() : $id = null;
+//$id = isset($car) ? $car->getId() : null;
+?>
+<form action="<?= $block->escapeHtml($block->getUrl('cars/save/index/id/', ['id' => $id])) ?>"
+      id="car_form"
+      method="post"
+      data-mage-init='{"validation":{}}'>
+
+    <fieldset class="filedset">
+        <legend class="legend"><span><?= $block->escapeHtml(__('Add car')) ?></span></legend><br />
+
+        <div class="field required">
+            <label class="label" for="car_model"><span><?= $block->escapeHtml(__('Car Model')) ?></span></label>
+            <div class="control">
+                <input name="car_model"
+                       id="car_model"
+                       title="<?= $block->escapeHtmlAttr(__('Car Model')) ?>"
+                       value="<?= $car ? $block->escapeHtmlAttr($car->getCarModel()) : '' ?>"
+                       class="input-text"
+                       type="text"
+                       data-validate="{required:true}"/>
+            </div>
+        </div>
+
+        <div class="field required">
+            <label class="label" for="car_manufacturer"><span><?= $block->escapeHtml(__('Car Manufacturer')) ?></span></label>
+            <div class="control">
+                <input name="car_manufacturer"
+                       id="car_manufacturer"
+                       title="<?= $block->escapeHtmlAttr(__('Car Manufacturer')) ?>"
+                       value="<?= $car ? $block->escapeHtmlAttr($car->getCarManufacturer()) : '' ?>"
+                       class="input-text"
+                       type="text"
+                       data-validate="{required:true}"/>
+            </div>
+        </div>
+
+        <div class="field required">
+            <label class="label" for="car_description"><span><?= $block->escapeHtml(__('Car Description')) ?></span></label>
+            <div class="control">
+                <input name="car_description"
+                       id="car_description"
+                       title="<?= $block->escapeHtmlAttr(__('Car Description')) ?>"
+                       value="<?= $car ? $block->escapeHtmlAttr($car->getCarDescription()) : '' ?>"
+                       class="input-text"
+                       type="text"
+                       data-validate="{required:true}"/>
+            </div>
+        </div>
+
+        <div class="field required">
+            <label class="label" for="car_release_year"><span><?= $block->escapeHtml(__('Car Release Year')) ?></span></label>
+            <div class="control">
+                <input name="car_release_year"
+                       id="car_release_year"
+                       title="<?= $block->escapeHtmlAttr(__('Car Release Year')) ?>"
+                       value="<?= $car ? $block->escapeHtmlAttr($car->getCarRealeaseYear()) : '' ?>"
+                       class="input-text"
+                       type="text"
+                       data-validate="{required:true, 'validate-greater-than-zero':true}"/>
+            </div>
+        </div>
+
+    </fieldset>
+
+    <div class="actions-toolbar">
+        <div class="primary">
+            <button type="submit" title="<?= $block->escapeHtmlAttr(__('Save')) ?>" class="action submit primary">
+                <span><?= $block->escapeHtml(__('Save')) ?></span>
+            </button>
+            <button type="submit" title="<?= $block->escapeHtmlAttr(__('Cancel')) ?>" class="action submit primary">
+                <a href="<?= $block->escapeHtml($block->getUrl('cars')) ?>" style="color:white; text-decoration: none;" ><?= __("CANCEL") ?></a>
+            </button>
+        </div>
+    </div>
+</form>
