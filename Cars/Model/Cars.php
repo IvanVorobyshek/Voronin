@@ -7,7 +7,7 @@ use Voronin\Cars\Model\ResourceModel\Cars as CarsResource;
 
 class Cars extends AbstractModel implements CarInterface
 {
-    const CACHE_TAG = 'voronin_cars_cars';
+    public const CACHE_TAG = 'voronin_cars_cars';
 
     /**
      * Model cache tag for clear cache in after save and after delete
@@ -37,6 +37,8 @@ class Cars extends AbstractModel implements CarInterface
     }
 
     /**
+     * Get ID
+     *
      * @return mixed
      */
     public function getId():int|null
@@ -45,7 +47,9 @@ class Cars extends AbstractModel implements CarInterface
     }
 
     /**
-     * @param $id
+     * Set ID
+     *
+     * @param int|null $id
      * @return CarInterface
      */
     public function setId($id):CarInterface
@@ -54,6 +58,8 @@ class Cars extends AbstractModel implements CarInterface
     }
 
     /**
+     * Get Car Model
+     *
      * @return string
      */
     public function getCarModel():string
@@ -62,15 +68,19 @@ class Cars extends AbstractModel implements CarInterface
     }
 
     /**
-     * @param $carModel
+     * Set Car Model
+     *
+     * @param string $carModel
      * @return CarInterface
      */
-    public function setCarModel($carModel):CarInterface
+    public function setCarModel(string $carModel):CarInterface
     {
         return $this->setData(self::CAR_MODEL, $carModel);
     }
 
     /**
+     * Get Car Manufacturer
+     *
      * @return string
      */
     public function getCarManufacturer():string
@@ -79,15 +89,19 @@ class Cars extends AbstractModel implements CarInterface
     }
 
     /**
-     * @param $carManufacturer
+     * Set Car Manufacturer
+     *
+     * @param string $carManufacturer
      * @return CarInterface
      */
-    public function setCarManufacturer($carManufacturer):CarInterface
+    public function setCarManufacturer(string $carManufacturer):CarInterface
     {
         return $this->setData(self::CAR_MANUFACTURER, $carManufacturer);
     }
 
     /**
+     * Get Car Description
+     *
      * @return string
      */
     public function getCarDescription():string
@@ -96,15 +110,19 @@ class Cars extends AbstractModel implements CarInterface
     }
 
     /**
-     * @param $carDescription
+     * Set Car Description
+     *
+     * @param string $carDescription
      * @return CarInterface
      */
-    public function setCarDescription($carDescription):CarInterface
+    public function setCarDescription(string $carDescription):CarInterface
     {
         return $this->setData(self::CAR_DESCRIPTION, $carDescription);
     }
 
     /**
+     * Get Car Release Year
+     *
      * @return string
      */
     public function getCarRealeaseYear():int
@@ -113,15 +131,19 @@ class Cars extends AbstractModel implements CarInterface
     }
 
     /**
-     * @param $carRealeaseYear
+     * Set Car Release Year
+     *
+     * @param int $carRealeaseYear
      * @return CarInterface
      */
-    public function setCarReleaseYear($carRealeaseYear):CarInterface
+    public function setCarReleaseYear(int $carRealeaseYear):CarInterface
     {
         return $this->setData(self::CAR_RELEASE_YEAR, $carRealeaseYear);
     }
 
     /**
+     * Get Date Car Created
+     *
      * @return string
      */
     public function getCarCreatedAt():string
@@ -130,15 +152,19 @@ class Cars extends AbstractModel implements CarInterface
     }
 
     /**
-     * @param $carCreatedAt
+     * Set Date Car Created
+     *
+     * @param string $carCreatedAt
      * @return CarInterface
      */
-    public function setCarCreatedAt($carCreatedAt):CarInterface
+    public function setCarCreatedAt(string $carCreatedAt):CarInterface
     {
         return $this->setData(self::CAR_CREATED_AT, $carCreatedAt);
     }
 
     /**
+     * Get Date Car Updated
+     *
      * @return string
      */
     public function getCarUpdatedAt():string
@@ -147,10 +173,12 @@ class Cars extends AbstractModel implements CarInterface
     }
 
     /**
-     * @param $carUpdatedAt
+     * Set Date Car Updated
+     *
+     * @param string $carUpdatedAt
      * @return CarInterface
      */
-    public function setCarUpdatedAt($carUpdatedAt):CarInterface
+    public function setCarUpdatedAt(string $carUpdatedAt):CarInterface
     {
         return $this->setData(self::CAR_UPDATED_AT, $carUpdatedAt);
     }

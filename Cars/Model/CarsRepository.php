@@ -55,6 +55,8 @@ class CarsRepository implements CarRepositoryInterface
     }
 
     /**
+     * Get Car
+     *
      * @param int $id
      * @return CarInterface
      * @throws NoSuchEntityException
@@ -70,6 +72,8 @@ class CarsRepository implements CarRepositoryInterface
     }
 
     /**
+     * Get List
+     *
      * @param \Magento\Framework\Api\SearchCriteriaInterface $searchCriteria
      * @return \Voronin\Cars\Api\Data\CarSearchResultInterface
      */
@@ -93,6 +97,8 @@ class CarsRepository implements CarRepositoryInterface
     }
 
     /**
+     * Save Car
+     *
      * @param \Voronin\Cars\Api\Data\CarInterface $car
      * @return CarInterface
      * @throws StateException
@@ -109,6 +115,8 @@ class CarsRepository implements CarRepositoryInterface
     }
 
     /**
+     * Delete Car
+     *
      * @param \Voronin\Cars\Api\Data\CarInterface $car
      * @return bool
      * @throws StateException
@@ -125,6 +133,8 @@ class CarsRepository implements CarRepositoryInterface
     }
 
     /**
+     * Delete Car by ID
+     *
      * @param int $id
      * @return bool
      */

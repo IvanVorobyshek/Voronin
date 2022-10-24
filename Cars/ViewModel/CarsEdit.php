@@ -2,17 +2,18 @@
 
 namespace Voronin\Cars\ViewModel;
 
-use Magento\Framework\App\Request\Http\Proxy;
+use Magento\Framework\App\RequestInterface;
 use Magento\Framework\View\Element\Block\ArgumentInterface;
 use Voronin\Cars\Api\CarRepositoryInterface;
 use Voronin\Cars\Api\Data\CarInterface;
 
 class CarsEdit implements ArgumentInterface
 {
+
     /**
-     * @var Proxy
+     * @var RequestInterface
      */
-    protected $request;
+    private RequestInterface $request;
 
     /**
      * @var CarRepositoryInterface
@@ -20,12 +21,12 @@ class CarsEdit implements ArgumentInterface
     private CarRepositoryInterface $carRepository;
 
     /**
-     * @param Proxy $request
+     * @param RequestInterface $request
      * @param CarRepositoryInterface $carRepository
      * @param array $data
      */
     public function __construct(
-        Proxy $request,
+        RequestInterface $request,
         CarRepositoryInterface $carRepository,
         array $data = []
     ) {
@@ -34,6 +35,8 @@ class CarsEdit implements ArgumentInterface
     }
 
     /**
+     * Get Car
+     *
      * @return CarInterface
      */
     public function getOutData()

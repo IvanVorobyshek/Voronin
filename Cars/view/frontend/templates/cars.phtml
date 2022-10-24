@@ -10,15 +10,15 @@ if (count($cars) > 0): ?>
 
 <table border="1">
     <tr>
-        <th><?= __("ID") ?></th>
-        <th><?= __("Model") ?></th>
-        <th><?= __("Manufacturer") ?></th>
-        <th><?= __("Description") ?></th>
-        <th><?= __("Release Year") ?></th>
-        <th><?= __("Created At") ?></th>
-        <th><?= __("Updated At") ?></th>
-        <th><?= __("Link to edit") ?></th>
-        <th><?= __("Link to delete") ?></th>
+        <th><?= $block->escapehtml(__("ID")) ?></th>
+        <th><?= $block->escapehtml(__("Model")) ?></th>
+        <th><?= $block->escapehtml(__("Manufacturer")) ?></th>
+        <th><?= $block->escapehtml(__("Description")) ?></th>
+        <th><?= $block->escapehtml(__("Release Year")) ?></th>
+        <th><?= $block->escapehtml(__("Created At")) ?></th>
+        <th><?= $block->escapehtml(__("Updated At")) ?></th>
+        <th><?= $block->escapehtml(__("Link to edit")) ?></th>
+        <th><?= $block->escapehtml(__("Link to delete")) ?></th>
     </tr>
     <?php foreach ($cars as $car): ?>
         <tr>
@@ -29,13 +29,17 @@ if (count($cars) > 0): ?>
             <td><?= $block->escapeHtml($car->getCarReleaseYear()) ?></td>
             <td><?= $block->escapeHtml($car->getCarCreatedAt()) ?></td>
             <td><?= $block->escapeHtml($car->getCarUpdatedAt()) ?></td>
-            <td><a href="<?= $block->escapeUrl($block->getUrl('cars/edit/index/id/', ['id' => $car->getId()])) ?>" class="btn_a action primary" style="color: #B2D0F7"><?= __("Edit") ?></a></td>
-            <td><a href="<?= $block->escapeUrl($block->getUrl('cars/delete/index/id/', ['id' => $car->getId()])) ?>" class="btn_a action primary" style="color: black"><?= __("Delete") ?></a></td>
+            <td><a href="<?= $block->escapeUrl($block->getUrl('cars/edit/index/id/', ['id' => $car->getId()])) ?>"
+                   class="btn_a action primary" style="color: #B2D0F7"><?= $block->escapehtml(__("Edit")) ?></a></td>
+            <td><a href="<?= $block->escapeUrl($block->getUrl('cars/delete/index/id/', ['id' => $car->getId()])) ?>"
+                   class="btn_a action primary" style="color: black"><?= $block->escapehtml(__("Delete")) ?></a></td>
         </tr>
     <?php endforeach; ?>
 </table>
-    <?php else :?>
-    <h1><?= __("There is no car to display.") ?></h1>
+    <?php else:?>
+    <h1><?= $block->escapehtml(__("There is no car to display.")) ?></h1>
 <?php endif;?>
     <hr />
-<a href="<?= $block->escapeHtml($block->getUrl('cars/add')) ?>" class="btn_a action primary"><?= __("Add car")?></a>
+<a href="<?= $block->escapeHtml($block->getUrl('cars/add')) ?>" class="btn_a action primary">
+    <?= $block->escapehtml(__("Add car")) ?>
+</a>

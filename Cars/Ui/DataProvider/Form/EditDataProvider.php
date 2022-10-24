@@ -35,26 +35,6 @@ class EditDataProvider extends AbstractDataProvider
     }
 
     /**
-     * Get DataSource data
-     *
-     * @return array
-     */
-    public function getDataSourseData()
-    {
-        return [];
-    }
-
-    /**
-     * Get Data
-     *
-     * @return array
-     */
-    public function getData()
-    {
-        return parent::getData();
-    }
-
-    /**
      * Get Meta
      *
      * @return array

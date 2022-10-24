@@ -28,7 +28,9 @@ $car ? $id = $car->getId() : $id = null;
         </div>
 
         <div class="field required">
-            <label class="label" for="car_manufacturer"><span><?= $block->escapeHtml(__('Car Manufacturer')) ?></span></label>
+            <label class="label" for="car_manufacturer">
+                <span><?= $block->escapeHtml(__('Car Manufacturer')) ?></span>
+            </label>
             <div class="control">
                 <input name="car_manufacturer"
                        id="car_manufacturer"
@@ -41,7 +43,9 @@ $car ? $id = $car->getId() : $id = null;
         </div>
 
         <div class="field required">
-            <label class="label" for="car_description"><span><?= $block->escapeHtml(__('Car Description')) ?></span></label>
+            <label class="label" for="car_description">
+                <span><?= $block->escapeHtml(__('Car Description')) ?></span>
+            </label>
             <div class="control">
                 <input name="car_description"
                        id="car_description"
@@ -54,7 +58,9 @@ $car ? $id = $car->getId() : $id = null;
         </div>
 
         <div class="field required">
-            <label class="label" for="car_release_year"><span><?= $block->escapeHtml(__('Car Release Year')) ?></span></label>
+            <label class="label" for="car_release_year">
+                <span><?= $block->escapeHtml(__('Car Release Year')) ?></span>
+            </label>
             <div class="control">
                 <input name="car_release_year"
                        id="car_release_year"
@@ -74,7 +80,9 @@ $car ? $id = $car->getId() : $id = null;
                 <span><?= $block->escapeHtml(__('Save')) ?></span>
             </button>
             <button type="submit" title="<?= $block->escapeHtmlAttr(__('Cancel')) ?>" class="action submit primary">
-                <a href="<?= $block->escapeHtml($block->getUrl('cars')) ?>" style="color:white; text-decoration: none;" ><?= __("CANCEL") ?></a>
+                <a href="<?= $block->escapeHtml($block->getUrl('cars')) ?>" style="color:white; text-decoration: none;" >
+                    <?= $block->escapeHtml(__("CANCEL")) ?>
+                </a>
             </button>
         </div>
     </div>

@@ -12,12 +12,17 @@ class Cars implements ArgumentInterface
      */
     private Collection $collection;
 
+    /**
+     * @param Collection $collection
+     */
     public function __construct(Collection $collection)
     {
         $this->collection = $collection;
     }
 
     /**
+     * Get All Cars to display
+     *
      * @return Collection
      */
     public function getAllCars(): Collection
