@@ -8,7 +8,6 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
 use Magento\Framework\Setup\UpgradeDataInterface;
-use Voronin\HeightAttribute\Model\Attribute\Frontend\Height as Frontend;
 
 class UpgradeData implements UpgradeDataInterface
 {
@@ -40,8 +39,8 @@ class UpgradeData implements UpgradeDataInterface
         $eavSetup = $this->eavSetupFactory->create(['setup' => $setup]);
 
         //Add Attribute, where may choose to display height or not
-//        $eavSetup->removeAttribute(\Magento\Catalog\Model\Product::ENTITY, 'height_yes_no');
-        $eavSetup->addAttribute(\Magento\Catalog\Model\Product::ENTITY, 'height_yes_no', [
+//        $eavSetup->removeAttribute(\Magento\Catalog\Model\Product::ENTITY, 'is_height_display');
+        $eavSetup->addAttribute(\Magento\Catalog\Model\Product::ENTITY, 'is_height_display', [
             'type' => 'int',
             'sort_order' => 200,
             'backend' => '',
@@ -65,10 +64,10 @@ class UpgradeData implements UpgradeDataInterface
         ]);
 
         //Add Height Attribute
-//        $eavSetup->removeAttribute(\Magento\Catalog\Model\Product::ENTITY, 'Height');
+//        $eavSetup->removeAttribute(\Magento\Catalog\Model\Product::ENTITY, 'height');
         $eavSetup->addAttribute(
             \Magento\Catalog\Model\Product::ENTITY,
-            'Height',
+            'height',
             [
                 'type' => 'int',
                 'sort_order' => 201,
@@ -83,9 +82,9 @@ class UpgradeData implements UpgradeDataInterface
                 'required' => false,
                 'user_defined' => false,
                 'default' => '',
-                'searchable' => true,
-                'filterable' => true,
-                'comparable' => true,
+                'searchable' => false,
+                'filterable' => false,
+                'comparable' => false,
                 'is_used_in_grid' => true,
                 'visible_on_front' => false,
                 'used_in_product_listing' => true,

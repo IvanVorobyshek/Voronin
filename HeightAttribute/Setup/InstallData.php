@@ -39,8 +39,8 @@ class InstallData implements InstallDataInterface
         $eavSetup = $this->eavSetupFactory->create(['setup' => $setup]);
 
         //Add Attribute, where may choose to display height or not
-        $eavSetup->removeAttribute(\Magento\Catalog\Model\Product::ENTITY, 'height_yes_no');
-        $eavSetup->addAttribute(\Magento\Catalog\Model\Product::ENTITY, 'height_yes_no', [
+        $eavSetup->removeAttribute(\Magento\Catalog\Model\Product::ENTITY, 'is_height_display');
+        $eavSetup->addAttribute(\Magento\Catalog\Model\Product::ENTITY, 'is_height_display', [
             'type' => 'int',
             'sort_order' => 200,
             'backend' => '',
@@ -64,10 +64,10 @@ class InstallData implements InstallDataInterface
         ]);
 
         //Add Height Attribute
-        $eavSetup->removeAttribute(\Magento\Catalog\Model\Product::ENTITY, 'Height');
+        $eavSetup->removeAttribute(\Magento\Catalog\Model\Product::ENTITY, 'height');
         $eavSetup->addAttribute(
             \Magento\Catalog\Model\Product::ENTITY,
-            'Height',
+            'height',
             [
                 'type' => 'int',
                 'sort_order' => 201,

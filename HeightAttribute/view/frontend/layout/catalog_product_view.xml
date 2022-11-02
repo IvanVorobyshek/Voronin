@@ -2,9 +2,9 @@
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <referenceContainer name="product.info.main">
-        <block name="product.attribute.value" template="Voronin_HeightAttribute::HeightAttributeDisplay.phtml" after="product.info.price">
+        <block name="product.attribute.value" template="Voronin_HeightAttribute::Catalog/Product/View/Attribute/height.phtml" after="product.info.price">
             <arguments>
-                <argument name="heightattribute" xsi:type="object">Voronin\HeightAttribute\ViewModel\HeightAttribute</argument>
+                <argument name="heightattribute" xsi:type="object">Voronin\HeightAttribute\ViewModel\Catalog\Product\Attribute\Height</argument>
             </arguments>
         </block>
     </referenceContainer>

@@ -1,14 +1,15 @@
 <?php
 
-namespace Voronin\HeightAttribute\ViewModel;
+namespace Voronin\HeightAttribute\ViewModel\Catalog\Product\Attribute;
 
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\View\Element\Block\ArgumentInterface;
 use Magento\Catalog\Model\Session as CatalogSession;
 use Magento\Catalog\Model\Product;
 use Magento\Catalog\Model\ResourceModel\Product as ProductResourceModel;
+use Magento\Catalog\Block\Product\View;
 
-class HeightAttribute implements ArgumentInterface
+class Height implements ArgumentInterface
 {
     /**
      * @var int
@@ -31,21 +32,24 @@ class HeightAttribute implements ArgumentInterface
     private int $prodId = 0;
 
     /**
-     * @var CatalogSession
+     * @var View
      */
-    private CatalogSession $catalogSession;
+    private View $view;
 
     /**
      * @param Product $product
      * @param ProductResourceModel $productResourceModel
+     * @param View $view
      * @param CatalogSession $catalogSession
      */
     public function __construct(
         Product $product,
         ProductResourceModel $productResourceModel,
+        View $view,
         CatalogSession $catalogSession
     ) {
         $this->product = $product;
+        $this->view = $view;
         $this->productResourceModel = $productResourceModel;
         $this->catalogSession = $catalogSession;
     }
@@ -58,7 +62,7 @@ class HeightAttribute implements ArgumentInterface
     public function getProdId():int
     {
         if (!$this->prodId) {
-            $this->prodId = (int)$this->catalogSession->getData('last_viewed_product_id');
+            $this->prodId = $this->view->getProduct()->getId();
         }
         return $this->prodId;
     }
@@ -72,9 +76,8 @@ class HeightAttribute implements ArgumentInterface
     public function getProductAttributeValue():int
     {
         if (!$this->heightValue) {
-            $productId = $this->getProdId();
-            $this->productResourceModel->load($this->product, $productId);
-            $value = (int)$this->productResourceModel->getAttribute('Height')->getFrontend()->getValue($this->product);
+            $this->productResourceModel->load($this->product, $this->getProdId());
+            $value = (int)$this->productResourceModel->getAttribute('height')->getFrontend()->getValue($this->product);
             $this->heightValue = $value;
         }
         return $this->heightValue;
@@ -83,14 +86,13 @@ class HeightAttribute implements ArgumentInterface
     /**
      * Get Yes or No to display Attribute or not
      *
-     * @return string
+     * @return int
      * @throws LocalizedException
      */
-    public function getYesNoValue():string
+    public function getValueToDisplay():int
     {
-        $productId = $this->getProdId();
-        $this->productResourceModel->load($this->product, $productId);
-        return $this->productResourceModel->getAttribute('height_yes_no')->getFrontend()->getValue($this->product);
+        $this->productResourceModel->load($this->product, $this->getProdId());
+        return $this->product->getData('is_height_display');
     }
 
     /**
@@ -101,9 +103,8 @@ class HeightAttribute implements ArgumentInterface
      */
     public function getProductAttributeLabel():string
     {
-        $productId = $this->getProdId();
-        $this->productResourceModel->load($this->product, $productId);
-        $productattributelabel = $this->productResourceModel->getAttribute('Height')->getFrontend()->getLabel();
+        $this->productResourceModel->load($this->product, $this->getProdId());
+        $productattributelabel = $this->productResourceModel->getAttribute('height')->getFrontend()->getLabel();
         return $productattributelabel;
     }
 }

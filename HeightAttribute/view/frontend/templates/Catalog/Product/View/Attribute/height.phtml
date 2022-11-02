@@ -1,0 +1,15 @@
+<?php
+/** @var \Voronin\HeightAttribute\Block\Template $block */
+/** @var $height \Voronin\HeightAttribute\ViewModel\Catalog\Product\Attribute\Height */
+$height = $block->getHeightattribute();
+?>
+<?php
+if (($height->getProductAttributeValue()) && ($height->getValueToDisplay())) {
+    ?>
+    <p>
+        <strong><?= $block->escapeHtmlAttr($height->getProductAttributeLabel()); ?> : </strong>
+        <?= $block->escapeHtmlAttr($height->getProductAttributeValue()); ?>
+    </p>
+    <?php
+}
+?>
