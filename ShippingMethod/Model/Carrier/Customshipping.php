@@ -45,7 +45,6 @@ class Customshipping extends AbstractCarrier implements CarrierInterface
         array $data = []
     ) {
         parent::__construct($scopeConfig, $rateErrorFactory, $logger, $data);
-
         $this->rateResultFactory = $rateResultFactory;
         $this->rateMethodFactory = $rateMethodFactory;
     }

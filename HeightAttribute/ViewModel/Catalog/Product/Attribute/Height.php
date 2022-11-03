@@ -40,18 +40,15 @@ class Height implements ArgumentInterface
      * @param Product $product
      * @param ProductResourceModel $productResourceModel
      * @param View $view
-     * @param CatalogSession $catalogSession
      */
     public function __construct(
         Product $product,
         ProductResourceModel $productResourceModel,
-        View $view,
-        CatalogSession $catalogSession
+        View $view
     ) {
         $this->product = $product;
         $this->view = $view;
         $this->productResourceModel = $productResourceModel;
-        $this->catalogSession = $catalogSession;
     }
 
     /**
