@@ -2,9 +2,16 @@
 
 namespace Voronin\ShippingMethod\Model\Carrier;
 
+use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Quote\Model\Quote;
 use Magento\Quote\Model\Quote\Address\RateRequest;
+use Magento\Quote\Model\Quote\Address\RateResult\ErrorFactory;
+use Magento\Quote\Model\Quote\Address\RateResult\MethodFactory;
+use Magento\Quote\Model\QuoteRepository;
 use Magento\Shipping\Model\Carrier\AbstractCarrier;
 use Magento\Shipping\Model\Carrier\CarrierInterface;
+use Magento\Shipping\Model\Rate\ResultFactory;
+use Psr\Log\LoggerInterface;
 
 /**
  * Custom shipping model
@@ -29,11 +36,17 @@ class Customshipping extends AbstractCarrier implements CarrierInterface
     private $rateMethodFactory;
 
     /**
-     * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
-     * @param \Magento\Quote\Model\Quote\Address\RateResult\ErrorFactory $rateErrorFactory
-     * @param \Psr\Log\LoggerInterface $logger
-     * @param \Magento\Shipping\Model\Rate\ResultFactory $rateResultFactory
-     * @param \Magento\Quote\Model\Quote\Address\RateResult\MethodFactory $rateMethodFactory
+     * @var \Magento\Quote\Model\QuoteRepository
+     */
+    private $quoteRep;
+
+    /**
+     * @param ScopeConfigInterface $scopeConfig
+     * @param ErrorFactory $rateErrorFactory
+     * @param LoggerInterface $logger
+     * @param ResultFactory $rateResultFactory
+     * @param MethodFactory $rateMethodFactory
+     * @param QuoteRepository $quoteRep
      * @param array $data
      */
     public function __construct(
@@ -42,11 +55,13 @@ class Customshipping extends AbstractCarrier implements CarrierInterface
         \Psr\Log\LoggerInterface $logger,
         \Magento\Shipping\Model\Rate\ResultFactory $rateResultFactory,
         \Magento\Quote\Model\Quote\Address\RateResult\MethodFactory $rateMethodFactory,
+        \Magento\Quote\Model\QuoteRepository $quoteRep,
         array $data = []
     ) {
         parent::__construct($scopeConfig, $rateErrorFactory, $logger, $data);
         $this->rateResultFactory = $rateResultFactory;
         $this->rateMethodFactory = $rateMethodFactory;
+        $this->quoteRep = $quoteRep;
     }
 
     /**
@@ -83,17 +98,22 @@ class Customshipping extends AbstractCarrier implements CarrierInterface
         $method->setMethod($this->_code);
         $method->setMethodTitle($this->getConfigData('name'));
 
+        // get the quote ID
+        $req = $request->getAllItems();
+        $quoteId = $req[0]->getData('quote_id');
+        // get quote
+        $quote = $this->quoteRep->get($quoteId);
         // Base_cart_total
-        $totalPrice = $request->getPackagePhysicalValue();
+        $totalPrice = $quote->getBaseSubtotal();
         // Custom_shipping_fee
         $shippingCost = (float)$this->getConfigData('shipping_cost');
         // Country_rate
         $cid = $request->getDestCountryId();
         $countryRate = self::COUNTRYRATE[$cid] ?? 1;
         // Number_of_total_products_in_card
-        $totalQty = $request->getPackageQty();
+        $totalQty = $quote->getItemsQty();
         // Number_of_uniq_products_in_card
-        $uniqueQty = count($request->getAllItems()) / 2;
+        $uniqueQty = $quote->getItemsCount();
         if ($uniqueQty <= 0) {
             return false;
         }
