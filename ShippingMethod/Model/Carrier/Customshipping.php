@@ -100,7 +100,7 @@ class Customshipping extends AbstractCarrier implements CarrierInterface
 
         // get the quote ID
         $req = $request->getAllItems();
-        $quoteId = $req[0]->getData('quote_id');
+        $quoteId = (int)$req[0]->getData('quote_id');
         // get quote
         $quote = $this->quoteRep->get($quoteId);
         // Base_cart_total
@@ -112,11 +112,11 @@ class Customshipping extends AbstractCarrier implements CarrierInterface
         $countryRate = self::COUNTRYRATE[$cid] ?? 1;
         // Number_of_total_products_in_card
         $totalQty = $quote->getItemsQty();
-        // Number_of_uniq_products_in_card
-        $uniqueQty = $quote->getItemsCount();
-        if ($uniqueQty <= 0) {
+        if ($totalQty <= 0) {
             return false;
         }
+        // Number_of_uniq_products_in_card
+        $uniqueQty = $quote->getItemsCount();
         // Calculating the shipping cost
         $shippingCost = ($totalPrice * $shippingCost * $uniqueQty) / $totalQty * $countryRate;
 
