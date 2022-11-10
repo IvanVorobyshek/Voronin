@@ -9,7 +9,7 @@
                 <shipping_cost>10</shipping_cost>
 <!--                <sallowspecific>0</sallowspecific>-->
                 <sort_order>15</sort_order>
-                <model>Voronin\ShippingMethod\Model\Carrier\Customshipping</model>
+                <model>Voronin\ShippingMethod\Model\Carrier\CustomShipping</model>
             </customshipping>
         </carriers>
     </default>
