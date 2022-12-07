@@ -16,7 +16,7 @@
         <column xsi:type="int" name="car_release_year" nullable="true" comment="Car Realease Year"/>
         <column xsi:type="timestamp" name="car_created_at" on_update="false" nullable="true" default="CURRENT_TIMESTAMP"
                 comment="Car created at"/>
-        <column xsi:type="timestamp" name="car_updated_at" nullable="true" on_update="true" default="CURRENT_TIMESTAMP"
+        <column xsi:type="timestamp" name="car_updated_at" nullable="false" on_update="true" default="CURRENT_TIMESTAMP"
                 comment="Car modificated at"/>
         <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="car_id"/>

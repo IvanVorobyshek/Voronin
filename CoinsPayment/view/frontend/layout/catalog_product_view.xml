@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <referenceContainer name="product.info.price">
+        <block name="product.coins.percent" template="Voronin_CoinsPayment::catalog/product/view/coins_percent.phtml"
+               ifconfig="Voronin_Loyalty/Loyalty_Module/Loyalty_Is_Enabled">
+            <arguments>
+                <argument name="coins_percent" xsi:type="object">Voronin\CoinsPayment\ViewModel\Catalog\Product\Coins</argument>
+            </arguments>
+        </block>
+    </referenceContainer>
+</page>

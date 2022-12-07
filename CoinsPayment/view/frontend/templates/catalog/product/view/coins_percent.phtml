@@ -1,0 +1,8 @@
+<?php
+/** @var \Voronin\CoinsPayment\Block\Template $block */
+/** @var $coins \Voronin\CoinsPayment\ViewModel\Catalog\Product\Coins */
+$coins = $block->getCoinsPercent();
+?>
+<p>
+    <?= $block->escapeHtml($coins->showPercentOfPurchase()) ?>
+</p>

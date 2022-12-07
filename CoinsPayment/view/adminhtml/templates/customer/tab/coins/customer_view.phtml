@@ -1,0 +1,194 @@
+<?php
+/**
+ * @var $block \Voronin\CoinsPayment\Block\Adminhtml\Coins
+ */
+$coins = $block->getCollection($block->getCustomerId());
+$total = $block->getTotalCoins($block->getCustomerId());
+?>
+<?php if ($coins && count($coins)) : ?>
+
+<div class="fieldset-wrapper customer-information">
+    <div class="fieldset-wrapper-title">
+        <span class="title"><?= __('Amount of coins') ?></span>
+    </div>
+    <div class="total-coins">
+        <button id="button" class="add-new-address-button action-basic">
+            <span><?= $block->escapeHtml(__('Edit coins')) ?></span>
+        </button>
+        <?= $block->escapeHtml(__('Total coins: ')) ?>
+        <strong><span class="total-view"><?= $block->escapeHtml($total) ?></span></strong>
+    </div>
+    <table class="admin__control-table" id="customer-coins-table">
+        <thead>
+        <tr>
+            <th scope="col" class="col"><?= $block->escapeHtml(__('Occasion')) ?></th>
+            <th scope="col" class="col"><?= $block->escapeHtml(__('Amount of purchase')) ?></th>
+            <th scope="col" class="col"><?= $block->escapeHtml(__('Coins received')) ?></th>
+            <th scope="col" class="col"><?= $block->escapeHtml(__('Coins spent')) ?></th>
+            <th scope="col" class="col"><?= $block->escapeHtml(__('Date of purchase')) ?></th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($coins as $coin) : ?>
+            <tr>
+                <td data-th="<?= $block->escapeHtml(__('Occasion')) ?>" class="col">
+                    <?= $coin->getOrderId() ? $block->escapeHtml($coin->getOrderId()) :
+                        $block->escapeHtml(__('Added by Admin')) ?>
+                </td>
+                <td data-th="<?= $block->escapeHtml(__('Amount of purchase')) ?>" class="col">
+                    <?= $block->escapeHtml($coin->getAmountOfPurchase()) ?>
+                </td>
+                <td data-th="<?= $block->escapeHtml(__('Coins received')) ?>" class="col">
+                    <?= $block->escapeHtml($coin->getReceivedCoins()) ?>
+                </td>
+                <td data-th="<?= $block->escapeHtml(__('Coins spent')) ?>" class="col">
+                    <?= $block->escapeHtml($coin->getSpendCoins()) ?>
+                </td>
+                <td data-th="<?= $block->escapeHtml(__('Date of purchase')) ?>" class="col">
+                    <?= $block->escapeHtml($coin->getDate()) ?>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+
+        </tbody>
+    </table>
+</div>
+<?php else : ?>
+    <div class="message info empty"><span>
+            <?= $block->escapeHtml(__('Customer has placed no orders and received no coins.')) ?></span>
+    </div>
+<?php endif ?>
+
+<input id="cust-id" type="hidden" value="<?= $block->escapeHtml($block->getCustomerId()) ?>" />
+
+<div id="modal">
+    <div class="modal-body-content">
+        <h2>
+            <?= $block->escapeHtml(__('Coins:')) ?>
+            <input class="admin__control-text" id="add-coins" type="text" value="" />
+        </h2>
+        <p id="number-info" style="display:none; color:red" type="">Enter number please</p>
+        <h2>
+            <?= $block->escapeHtml(__('Total coins: ')) ?>
+            <strong><span class="total-view"><?= $block->escapeHtml($total) ?></span></strong>
+        </h2>
+
+
+    </div>
+</div>
+
+<script type="text/javascript">
+    require([
+        "jquery",
+        "Magento_Ui/js/modal/modal"
+    ],function($, modal) {
+
+        var options = {
+            type: 'popup',
+            responsive: true,
+            title: "Add customer's coins",
+            buttons: [
+                {
+                    text: $.mage.__('Add'),
+                    class: 'add-new-address-button action-basic',
+                    click: function () {
+                        let coins = document.querySelector('#add-coins').value;
+                        coins = coins.trim();
+                        if (isNaN(coins) || coins === ''){
+                            document.querySelector('#number-info').style.display = 'inline';
+                        } else {
+                            document.querySelector('#number-info').style.display = 'none';
+                            let id = document.querySelector('#cust-id').value;
+                            $.post(
+                                '/admin/coins/index/savecoins/id/' + id,
+                                {
+                                    'coins': coins
+                                },
+                                function (result) { // response from the server
+                                    if (result.good) {
+                                        //changing number of coins
+                                        const totals = document.querySelectorAll('.total-view');
+                                        if (totals.length > 0) {
+                                            for (let index = 0; index < totals.length; index++) {
+                                                totals[index].textContent = result.total_coins;
+                                            }
+                                        }
+                                        //clean table
+                                        var table = document.getElementById("customer-coins-table");
+                                        var newRow, newCell, cellData;
+                                        while(table.rows.length > 1) {
+                                            table.deleteRow(1);
+                                        }
+                                        for (const property in result) {
+                                            if (typeof result[property] === 'object'){
+                                                //add new row
+                                                newRow = table.insertRow();
+                                                console.log(`${property}: ${result[property]}`);
+                                                //add new cells
+                                                //first cell - order id
+                                                newCell = newRow.insertCell();
+                                                cellData = result[property]['order_id'];
+                                                if (cellData === null) {
+                                                    newCell.textContent = "<?= $block->escapeHtml(__('Added by Admin')) ?>";
+                                                } else {
+                                                    newCell.textContent = cellData;
+                                                }
+                                                //second cell - amount of purchase
+                                                newCell = newRow.insertCell();
+                                                cellData = result[property]['amount_of_purchase'];
+                                                if (cellData === null) {
+                                                    newCell.textContent = '0';
+                                                } else {
+                                                    newCell.textContent = cellData;
+                                                }
+                                                //third cell - coins received
+                                                newCell = newRow.insertCell();
+                                                cellData = result[property]['coins_received'];
+                                                if (cellData === null) {
+                                                    newCell.textContent = '0';
+                                                } else {
+                                                    newCell.textContent = cellData;
+                                                }
+                                                //fourth cell - coins spent
+                                                newCell = newRow.insertCell();
+                                                cellData = result[property]['coins_spend'];
+                                                if (cellData === null) {
+                                                    newCell.textContent = '0';
+                                                } else {
+                                                    newCell.textContent = cellData;
+                                                }
+                                                //fifth cell - date
+                                                newCell = newRow.insertCell();
+                                                cellData = result[property]['date'];
+                                                if (cellData === null) {
+                                                    newCell.textContent = '0';
+                                                } else {
+                                                    newCell.textContent = cellData;
+                                                }
+                                            }
+
+                                        }
+                                    }
+                                }
+                            );
+                            this.closeModal();
+                        }
+                    }
+                },
+                {
+                    text: $.mage.__('Cancel'),
+                    class: 'add-new-address-button action-basic',
+                    click: function () {
+                        //close modal window
+                        this.closeModal();
+                    }
+                }
+            ]
+        };
+
+        var popup = modal(options, $('#modal'));
+        $("#button").click(function() {
+            $('#modal').modal('openModal');
+        });
+    });
+</script>

@@ -6,6 +6,7 @@ use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Quote\Model\Quote;
 use Magento\Quote\Model\Quote\Address\RateRequest;
 use Magento\Quote\Model\Quote\Address\RateResult\ErrorFactory;
 use Magento\Quote\Model\Quote\Address\RateResult\MethodFactory;
@@ -87,6 +88,11 @@ class CustomShipping extends AbstractCarrier implements CarrierInterface
     {
         // get quote
         $quote = $this->session->getQuote();
+        //--------
+        $itemsCollection = $quote->getItemsCollection();
+        $quote->getSubtotal();
+        $items = $quote->getItems();
+        //--------
         // Base_cart_total
         $totalPrice = $quote->getBaseSubtotal();
         // Custom_shipping_fee
@@ -95,6 +101,9 @@ class CustomShipping extends AbstractCarrier implements CarrierInterface
         $countryRate = self::COUNTRYRATE[$cid] ?? 1;
         // Number_of_total_products_in_card
         $totalQty = $quote->getItemsQty();
+        if ($totalQty <= 0) {
+            return false;
+        }
         // Number_of_uniq_products_in_card
         $uniqueQty = $quote->getItemsCount();
         // Calculating the shipping cost

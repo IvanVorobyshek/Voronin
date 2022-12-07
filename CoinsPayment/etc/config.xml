@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <Voronin_Loyalty>
+            <Loyalty_Module>
+                <Loyalty_Is_Enabled>1</Loyalty_Is_Enabled>
+            </Loyalty_Module>
+        </Voronin_Loyalty>
+
+        <payment>
+            <coinspayment>
+                <active>1</active>
+                <model>Voronin\CoinsPayment\Model\Payment\CoinsPayment</model>
+                <order_status>pending</order_status>
+                <title>Coins</title>
+                <allowspecific>0</allowspecific>
+                <group>Offline</group>
+            </coinspayment>
+        </payment>
+    </default>
+</config>

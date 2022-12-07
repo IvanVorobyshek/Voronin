@@ -1,0 +1,54 @@
+<?php
+/** @var Voronin\CoinsPayment\Block\Customer\Coins $block */
+$coins = $block->getCollection($block->getCustomerId());
+$total = $block->getTotalCoins($block->getCustomerId());
+?>
+<?php if ($coins && count($coins)) : ?>
+    <div class="table-wrapper orders-history">
+        <table class="data table table-order-items history" id="my-coins-table">
+            <caption class="table-caption"><?= $block->escapeHtml(__('Amount of coins')) ?></caption>
+            <thead>
+            <tr>
+                <th scope="col" class="col"><?= $block->escapeHtml(__('Occasion')) ?></th>
+                <th scope="col" class="col"><?= $block->escapeHtml(__('Amount of purchase')) ?></th>
+                <th scope="col" class="col"><?= $block->escapeHtml(__('Coins received')) ?></th>
+                <th scope="col" class="col"><?= $block->escapeHtml(__('Coins spent')) ?></th>
+                <th scope="col" class="col"><?= $block->escapeHtml(__('Date of purchase')) ?></th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php foreach ($coins as $coin) : ?>
+                <tr>
+                    <td data-th="<?= $block->escapeHtml(__('Occasion')) ?>" class="col">
+                        <?= $coin->getOrderId() ? $block->escapeHtml($coin->getOrderId()) :
+                            $block->escapeHtml(__('Added by Admin')) ?>
+                    </td>
+                    <td data-th="<?= $block->escapeHtml(__('Amount of purchase')) ?>" class="col">
+                        <?= $block->escapeHtml($coin->getAmountOfPurchase()) ?>
+                    </td>
+                    <td data-th="<?= $block->escapeHtml(__('Coins received')) ?>" class="col">
+                        <?= $block->escapeHtml($coin->getReceivedCoins()) ?>
+                    </td>
+                    <td data-th="<?= $block->escapeHtml(__('Coins spent')) ?>" class="col">
+                        <?= $block->escapeHtml($coin->getSpendCoins()) ?>
+                    </td>
+                    <td data-th="<?= $block->escapeHtml(__('Date of purchase')) ?>" class="col">
+                        <?= $block->escapeHtml($coin->getDate()) ?>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+    <div class="total-coins">
+        <?= $block->escapeHtml(__('Your total coins: ')) ?>
+        <strong><?= $block->escapeHtml($total) ?></strong>
+    </div>
+    <?php if ($block->getPagerHtml()) : ?>
+        <div class="order-products-toolbar toolbar bottom"><?= $block->getPagerHtml() ?></div>
+    <?php endif ?>
+<?php else : ?>
+    <div class="message info empty"><span>
+            <?= $block->escapeHtml(__('You have placed no orders and received no coins.')) ?></span>
+    </div>
+<?php endif ?>
