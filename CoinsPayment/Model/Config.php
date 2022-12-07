@@ -47,7 +47,7 @@ class Config
         return $this->config->getValue(self::XML_PATH_PERCENT_TO_COINS);
     }
 
-    public function getCoinsPaymentInstructions(): string
+    public function getCoinsPaymentInstructions(): string|null
     {
         return $this->config->getValue(self::XML_PATH_COINSPAYMENT_INSTRUCTIONS);
     }

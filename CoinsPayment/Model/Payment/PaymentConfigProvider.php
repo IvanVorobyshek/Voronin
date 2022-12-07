@@ -6,17 +6,16 @@ use Magento\Checkout\Model\ConfigProviderInterface;
 use Magento\Framework\Escaper;
 use Magento\Payment\Helper\Data as PaymentHelper;
 use Voronin\CoinsPayment\Block\Customer\Coins;
+use Voronin\CoinsPayment\Model\Config;
 
-class InstructionsConfigProvider implements ConfigProviderInterface
+class PaymentConfigProvider implements ConfigProviderInterface
 {
-    // /**
-    //  * @var string[]
-    //  */
-    // protected $methodCodes = [
-    //     CoinsPayment::CUSTOM_PAYMENT_CODE,
-    // ];
+
+    const CODE = 'coinspayment';
 
     private Coins $coins;
+
+    private Config $config;
 
     protected $methods = [];
 
@@ -32,30 +31,22 @@ class InstructionsConfigProvider implements ConfigProviderInterface
     public function __construct(
         PaymentHelper $paymentHelper,
         Escaper       $escaper,
+        Config $config,
         Coins $coins
-    )
-    {
+    ) {
         $this->coins = $coins;
         $this->escaper = $escaper;
+        $this->config = $config;
         $this->methods['coinspayment'] = $paymentHelper->getMethodInstance('coinspayment');
     }
 
     public function getConfig()
     {
         $config = [];
-        $config['payment']['instructions']['coinspayment'] = nl2br($this->escaper->escapeHtml($this->methods['coinspayment']->getInstructions()));
+        $paymentInstruction = $this->config->getCoinsPaymentInstructions();
+        $config['payment']['instructions']['coinspayment'] = nl2br($this->escaper->escapeHtml($paymentInstruction));
+
         $config['payment']['instructions']['coins'] = $this->coins->getTotalCoins($this->coins->getCustomerId());
         return $config;
     }
-
-    // /**
-    //  * Get instructions text from config
-    //  *
-    //  * @param string $code
-    //  * @return string
-    //  */
-    // protected function getInstructions($code)
-    // {
-    //     return nl2br($this->escaper->escapeHtml($this->methods[$code]->getInstructions()));
-    // }
 }
