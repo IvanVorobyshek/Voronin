@@ -20,7 +20,4 @@ class Coins extends AbstractDb
     {
         $this->_init(self::TABLE_NAME, self::ID_FIELD_NAME);
     }
-
-
 }
-

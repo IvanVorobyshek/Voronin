@@ -2,24 +2,41 @@
 
 namespace Voronin\CoinsPayment\Block\Adminhtml;
 
-use Voronin\CoinsPayment\Model\ResourceModel\Coins\Collection;
 use Magento\Backend\App\Action;
+use Magento\Backend\Block\Template\Context;
+use Magento\Framework\Phrase;
+use Voronin\CoinsPayment\Model\ResourceModel\Coins\Collection;
 
 class Coins extends \Magento\Backend\Block\Template implements \Magento\Ui\Component\Layout\Tabs\TabInterface
 {
     /**
-     * Template
+     * Template File
      *
      * @var string
      */
     protected $_template = 'customer/tab/coins/customer_view.phtml';
 
+    /**
+     * @var Collection
+     */
     private Collection $collection;
 
+    /**
+     * @var Action
+     */
     private Action $action;
 
+    /**
+     * @var int
+     */
     private $customerId;
 
+    /**
+     * @param Context $context
+     * @param Action $action
+     * @param Collection $collection
+     * @param array $data
+     */
     public function __construct(
         \Magento\Backend\Block\Template\Context $context,
         Action $action,
@@ -31,6 +48,11 @@ class Coins extends \Magento\Backend\Block\Template implements \Magento\Ui\Compo
         parent::__construct($context, $data);
     }
 
+    /**
+     * Get Customer ID
+     *
+     * @return int
+     */
     public function getCustomerId():int
     {
         if ($this->customerId === null) {
@@ -39,6 +61,12 @@ class Coins extends \Magento\Backend\Block\Template implements \Magento\Ui\Compo
         return $this->customerId;
     }
 
+    /**
+     * Get Customer's Coins Data
+     *
+     * @param int $id
+     * @return Collection
+     */
     public function getCollection(int $id): Collection
     {
         $this->collection->addFieldToSelect(['customer_id', 'order_id', 'amount_of_purchase',
@@ -48,6 +76,12 @@ class Coins extends \Magento\Backend\Block\Template implements \Magento\Ui\Compo
         return $this->collection;
     }
 
+    /**
+     * Get The Total Of Customer's Coins
+     *
+     * @param int $id
+     * @return float
+     */
     public function getTotalCoins(int $id): float
     {
         $total = 0;
@@ -59,7 +93,9 @@ class Coins extends \Magento\Backend\Block\Template implements \Magento\Ui\Compo
     }
 
     /**
-     * @return \Magento\Framework\Phrase
+     * Get Tab Label
+     *
+     * @return Phrase|string
      */
     public function getTabLabel()
     {
@@ -67,7 +103,9 @@ class Coins extends \Magento\Backend\Block\Template implements \Magento\Ui\Compo
     }
 
     /**
-     * @return \Magento\Framework\Phrase
+     * Get Tab Title
+     *
+     * @return Phrase|string
      */
     public function getTabTitle()
     {
@@ -75,6 +113,8 @@ class Coins extends \Magento\Backend\Block\Template implements \Magento\Ui\Compo
     }
 
     /**
+     * To Show Tab or not
+     *
      * @return bool
      */
     public function canShowTab()
@@ -86,6 +126,8 @@ class Coins extends \Magento\Backend\Block\Template implements \Magento\Ui\Compo
     }
 
     /**
+     * Is Tab hidden
+     *
      * @return bool
      */
     public function isHidden()
@@ -94,11 +136,6 @@ class Coins extends \Magento\Backend\Block\Template implements \Magento\Ui\Compo
             return false;
         }
         return true;
-    }
-
-    public function getContent()
-    {
-        return 'ASD!';
     }
 
     /**
@@ -130,5 +167,4 @@ class Coins extends \Magento\Backend\Block\Template implements \Magento\Ui\Compo
     {
         return false;
     }
-
 }

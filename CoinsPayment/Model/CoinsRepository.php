@@ -2,7 +2,6 @@
 
 namespace Voronin\CoinsPayment\Model;
 
-use Magento\Framework\Api\SearchCriteriaInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Exception\StateException;
 use Voronin\CoinsPayment\Api\CoinsRepositoryInterface;
@@ -10,30 +9,39 @@ use Voronin\CoinsPayment\Api\Data\CoinsInterface;
 use Voronin\CoinsPayment\Model\Coins;
 use Voronin\CoinsPayment\Model\CoinsFactory;
 use Voronin\CoinsPayment\Model\ResourceModel\Coins as CoinsResource;
-use Voronin\CoinsPayment\Model\ResourceModel\Coins\Collection as CoinsCollection;
-use Voronin\CoinsPayment\Model\ResourceModel\Coins\CollectionFactory as CoinsCollectionFactory;
 
 class CoinsRepository implements CoinsRepositoryInterface
 {
 
-    private $coinsResource;
+    /**
+     * @var CoinsResource
+     */
+    private CoinsResource $coinsResource;
 
-    private $coinsFactory;
+    /**
+     * @var CoinsFactory
+     */
+    private CoinsFactory $coinsFactory;
 
-    private $coinsCollectionFactory;
-
-    private $coinsSearchResultFactory;
-
+    /**
+     * @param CoinsResource $coinsResource
+     * @param CoinsFactory $coinsFactory
+     */
     public function __construct(
         CoinsResource $coinsResource,
-        CoinsFactory $coinsFactory,
-        CoinsCollectionFactory $coinsCollectionFactory
+        CoinsFactory $coinsFactory
     ) {
         $this->coinsResource = $coinsResource;
         $this->coinsFactory = $coinsFactory;
-        $this->coinsCollectionFactory = $coinsCollectionFactory;
     }
 
+    /**
+     * Get coin row by ID
+     *
+     * @param int $id
+     * @return CoinsInterface
+     * @throws NoSuchEntityException
+     */
     public function get(int $id): CoinsInterface
     {
         $coin = $this->coinsFactory->create();
@@ -44,6 +52,13 @@ class CoinsRepository implements CoinsRepositoryInterface
         return $coin;
     }
 
+    /**
+     * Save customer coins
+     *
+     * @param CoinsInterface $coin
+     * @return CoinsInterface
+     * @throws StateException
+     */
     public function save(CoinsInterface $coin): CoinsInterface
     {
         try {
@@ -54,6 +69,13 @@ class CoinsRepository implements CoinsRepositoryInterface
         return $coin;
     }
 
+    /**
+     * Delete customer coin
+     *
+     * @param CoinsInterface $coin
+     * @return bool
+     * @throws StateException
+     */
     public function delete(CoinsInterface $coin): bool
     {
         try {
@@ -64,6 +86,14 @@ class CoinsRepository implements CoinsRepositoryInterface
         return true;
     }
 
+    /**
+     * Delete Customer coin by ID
+     *
+     * @param int $id
+     * @return bool
+     * @throws NoSuchEntityException
+     * @throws StateException
+     */
     public function deleteById(int $id): bool
     {
         return $this->delete($this->get($id));

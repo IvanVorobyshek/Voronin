@@ -4,20 +4,24 @@ namespace Voronin\CoinsPayment\Model\Payment;
 
 use Magento\Checkout\Model\ConfigProviderInterface;
 use Magento\Framework\Escaper;
-use Magento\Payment\Helper\Data as PaymentHelper;
+use Magento\Framework\Exception\LocalizedException;
 use Voronin\CoinsPayment\Block\Customer\Coins;
 use Voronin\CoinsPayment\Model\Config;
 
 class PaymentConfigProvider implements ConfigProviderInterface
 {
 
-    const CODE = 'coinspayment';
+    public const CODE = 'coinspayment';
 
+    /**
+     * @var Coins
+     */
     private Coins $coins;
 
+    /**
+     * @var Config
+     */
     private Config $config;
-
-    protected $methods = [];
 
     /**
      * @var Escaper
@@ -25,11 +29,12 @@ class PaymentConfigProvider implements ConfigProviderInterface
     protected $escaper;
 
     /**
-     * @param PaymentHelper $paymentHelper
      * @param Escaper $escaper
+     * @param Config $config
+     * @param Coins $coins
+     * @throws LocalizedException
      */
     public function __construct(
-        PaymentHelper $paymentHelper,
         Escaper       $escaper,
         Config $config,
         Coins $coins
@@ -37,15 +42,18 @@ class PaymentConfigProvider implements ConfigProviderInterface
         $this->coins = $coins;
         $this->escaper = $escaper;
         $this->config = $config;
-        $this->methods['coinspayment'] = $paymentHelper->getMethodInstance('coinspayment');
     }
 
+    /**
+     * Get Config
+     *
+     * @return array
+     */
     public function getConfig()
     {
         $config = [];
         $paymentInstruction = $this->config->getCoinsPaymentInstructions();
         $config['payment']['instructions']['coinspayment'] = nl2br($this->escaper->escapeHtml($paymentInstruction));
-
         $config['payment']['instructions']['coins'] = $this->coins->getTotalCoins($this->coins->getCustomerId());
         return $config;
     }

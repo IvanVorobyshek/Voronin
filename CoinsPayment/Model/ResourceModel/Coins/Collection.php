@@ -3,6 +3,8 @@
 namespace Voronin\CoinsPayment\Model\ResourceModel\Coins;
 
 use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
+use Voronin\CoinsPayment\Model\Coins;
+use Voronin\CoinsPayment\Model\ResourceModel\Coins as CoinsResource;
 
 class Collection extends AbstractCollection
 {
@@ -13,6 +15,6 @@ class Collection extends AbstractCollection
      */
     public function _construct()
     {
-        $this->_init('Voronin\CoinsPayment\Model\Coins', 'Voronin\CoinsPayment\Model\ResourceModel\Coins');
+        $this->_init(Coins::Class, CoinsResource::Class);
     }
 }

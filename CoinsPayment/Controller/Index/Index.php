@@ -3,7 +3,11 @@
 namespace Voronin\CoinsPayment\Controller\Index;
 
 use Magento\Framework\App\ActionInterface;
+use Magento\Framework\App\ResponseInterface;
+use Magento\Framework\Controller\Result\Forward;
 use Magento\Framework\Controller\Result\ForwardFactory;
+use Magento\Framework\Controller\ResultInterface;
+use Magento\Framework\View\Result\Page;
 use Magento\Framework\View\Result\PageFactory;
 use Voronin\CoinsPayment\Model\Config;
 
@@ -24,6 +28,11 @@ class Index implements ActionInterface
      */
     private $config;
 
+    /**
+     * @param PageFactory $pageFactory
+     * @param ForwardFactory $forwardFactory
+     * @param Config $config
+     */
     public function __construct(
         PageFactory $pageFactory,
         ForwardFactory $forwardFactory,
@@ -34,6 +43,11 @@ class Index implements ActionInterface
         $this->forwardFactory = $forwardFactory;
     }
 
+    /**
+     * Show customer's coin Page
+     *
+     * @return ResponseInterface|Forward|ResultInterface|Page
+     */
     public function execute()
     {
         if ($this->config->isEnabled()) {

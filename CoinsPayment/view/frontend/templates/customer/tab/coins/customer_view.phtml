@@ -3,7 +3,7 @@
 $coins = $block->getCollection($block->getCustomerId());
 $total = $block->getTotalCoins($block->getCustomerId());
 ?>
-<?php if ($coins && count($coins)) : ?>
+<?php if ($coins && count($coins)): ?>
     <div class="table-wrapper orders-history">
         <table class="data table table-order-items history" id="my-coins-table">
             <caption class="table-caption"><?= $block->escapeHtml(__('Amount of coins')) ?></caption>
@@ -17,7 +17,7 @@ $total = $block->getTotalCoins($block->getCustomerId());
             </tr>
             </thead>
             <tbody>
-            <?php foreach ($coins as $coin) : ?>
+            <?php foreach ($coins as $coin): ?>
                 <tr>
                     <td data-th="<?= $block->escapeHtml(__('Occasion')) ?>" class="col">
                         <?= $coin->getOrderId() ? $block->escapeHtml($coin->getOrderId()) :
@@ -44,10 +44,10 @@ $total = $block->getTotalCoins($block->getCustomerId());
         <?= $block->escapeHtml(__('Your total coins: ')) ?>
         <strong><?= $block->escapeHtml($total) ?></strong>
     </div>
-    <?php if ($block->getPagerHtml()) : ?>
+    <?php if ($block->getPagerHtml()): ?>
         <div class="order-products-toolbar toolbar bottom"><?= $block->getPagerHtml() ?></div>
     <?php endif ?>
-<?php else : ?>
+<?php else: ?>
     <div class="message info empty"><span>
             <?= $block->escapeHtml(__('You have placed no orders and received no coins.')) ?></span>
     </div>

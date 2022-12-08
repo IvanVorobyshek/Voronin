@@ -3,6 +3,7 @@
 namespace Voronin\CoinsPayment\Block\Customer;
 
 use Magento\Customer\Model\Session;
+use Magento\Framework\View\Element\Template\Context;
 use Voronin\CoinsPayment\Model\ResourceModel\Coins\Collection;
 use Voronin\CoinsPayment\Model\ResourceModel\Coins\CollectionFactory;
 
@@ -13,14 +14,27 @@ class Coins extends \Magento\Framework\View\Element\Template
      */
     private Collection $collection;
 
+    /**
+     * @var CollectionFactory
+     */
     private CollectionFactory $collectionFactory;
 
+    /**
+     * @var Session
+     */
     private Session $customerSession;
 
+    /**
+     * @var int
+     */
     private $customerId;
 
     /**
+     * @param Context $context
      * @param Collection $collection
+     * @param CollectionFactory $collectionFactory
+     * @param Session $customerSession
+     * @param array $data
      */
     public function __construct(
         \Magento\Framework\View\Element\Template\Context $context,
@@ -35,6 +49,11 @@ class Coins extends \Magento\Framework\View\Element\Template
         parent::__construct($context, $data);
     }
 
+    /**
+     * Get Customer ID
+     *
+     * @return int
+     */
     public function getCustomerId(): int
     {
         if ($this->customerId === null) {
@@ -43,6 +62,12 @@ class Coins extends \Magento\Framework\View\Element\Template
         return $this->customerId;
     }
 
+    /**
+     * Get Customer's Coins Data
+     *
+     * @param int $id
+     * @return Collection
+     */
     public function getCollection(int $id): Collection
     {
         $this->collection->addFieldToSelect(['customer_id', 'order_id', 'amount_of_purchase',
@@ -52,6 +77,12 @@ class Coins extends \Magento\Framework\View\Element\Template
         return $this->collection;
     }
 
+    /**
+     * Get The Total Of Customer's Coins
+     *
+     * @param int $id
+     * @return float
+     */
     public function getTotalCoins(int $id): float
     {
         $total = 0;
@@ -65,11 +96,12 @@ class Coins extends \Magento\Framework\View\Element\Template
         return $total;
     }
 
-    public function getContent(): string
-    {
-        return 'DD!';
-    }
-
+    /**
+     * Prepare Layout
+     *
+     * @return $this|Coins
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
     protected function _prepareLayout()
     {
         parent::_prepareLayout();
@@ -86,6 +118,11 @@ class Coins extends \Magento\Framework\View\Element\Template
         return $this;
     }
 
+    /**
+     * Get Pager
+     *
+     * @return string
+     */
     public function getPagerHtml()
     {
         return $this->getChildHtml('pager');

@@ -9,12 +9,27 @@ use Voronin\CoinsPayment\Model\ResourceModel\Coins\Collection;
 
 class SalesOrderAfterSavedObserver implements \Magento\Framework\Event\ObserverInterface
 {
+
+    /**
+     * @var Collection
+     */
     private Collection $collection;
 
+    /**
+     * @var CoinsRepositoryInterface
+     */
     private CoinsRepositoryInterface $coinsRepository;
 
+    /**
+     * @var ManagerInterface
+     */
     private ManagerInterface $messageManager;
 
+    /**
+     * @param Collection $collection
+     * @param CoinsRepositoryInterface $coinsRepository
+     * @param ManagerInterface $messageManager
+     */
     public function __construct(
         Collection $collection,
         CoinsRepositoryInterface $coinsRepository,
@@ -24,6 +39,13 @@ class SalesOrderAfterSavedObserver implements \Magento\Framework\Event\ObserverI
         $this->coinsRepository = $coinsRepository;
         $this->messageManager = $messageManager;
     }
+
+    /**
+     * Make is_completed = 1 if order - complete or paid with coins
+     *
+     * @param Observer $observer
+     * @return $this|void
+     */
     public function execute(Observer $observer)
     {
         $order = $observer->getEvent()->getOrder();

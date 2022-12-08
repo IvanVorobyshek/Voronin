@@ -6,13 +6,22 @@ use Magento\Framework\View\Element\Block\ArgumentInterface;
 use Magento\Catalog\Block\Product\View;
 use Voronin\CoinsPayment\Model\Config;
 
-
 class Coins implements ArgumentInterface
 {
+    /**
+     * @var View
+     */
     private View $view;
 
+    /**
+     * @var Config
+     */
     private Config $config;
 
+    /**
+     * @param View $view
+     * @param Config $config
+     */
     public function __construct(
         View $view,
         Config $config
@@ -21,6 +30,11 @@ class Coins implements ArgumentInterface
         $this->config = $config;
     }
 
+    /**
+     * Message with percent of product purchase
+     *
+     * @return string|null
+     */
     public function showPercentOfPurchase(): string|null
     {
         if ($this->config->isMessageToShow()) {
@@ -29,6 +43,11 @@ class Coins implements ArgumentInterface
         return null;
     }
 
+    /**
+     * Get Percent Of Product Purchase
+     *
+     * @return float
+     */
     public function getPercentOfPurchase(): float
     {
         //get product final price
@@ -36,6 +55,12 @@ class Coins implements ArgumentInterface
         return $this->calcPercent($price);
     }
 
+    /**
+     * Calculating Percent Of Product Purchase
+     *
+     * @param float $price
+     * @return float
+     */
     public function calcPercent(float $price): float
     {
         //get percent from settings

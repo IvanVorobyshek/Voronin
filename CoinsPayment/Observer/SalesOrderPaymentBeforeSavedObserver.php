@@ -5,6 +5,8 @@ namespace Voronin\CoinsPayment\Observer;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Event\Observer;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Message\ManagerInterface;
 use Magento\Webapi\Controller\Rest\InputParamsResolver;
 use Voronin\CoinsPayment\Api\CoinsRepositoryInterface;
@@ -14,22 +16,56 @@ use Voronin\CoinsPayment\ViewModel\Catalog\Product\Coins;
 
 class SalesOrderPaymentBeforeSavedObserver implements \Magento\Framework\Event\ObserverInterface
 {
+    /**
+     * @var InputParamsResolver
+     */
     protected $inputParamsResolver;
 
+    /**
+     * @var RequestInterface
+     */
     protected $requestInterface;
 
+    /**
+     * @var Session
+     */
     private Session $session;
 
+    /**
+     * @var Coins
+     */
     private Coins $coins;
 
+    /**
+     * @var CoinsFactory
+     */
     private CoinsFactory $coinsFactory;
 
+    /**
+     * @var CoinsRepositoryInterface
+     */
     private CoinsRepositoryInterface $coinsRepository;
 
+    /**
+     * @var Config
+     */
     private Config $config;
 
+    /**
+     * @var ManagerInterface
+     */
     private ManagerInterface $messageManager;
 
+    /**
+     * @param InputParamsResolver $inputParamsResolver
+     * @param RequestInterface $requestInterface
+     * @param Session $session
+     * @param Coins $coins
+     * @param Config $config
+     * @param CoinsFactory $coinsFactory
+     * @param ManagerInterface $messageManager
+     * @param CoinsRepositoryInterface $coinsRepository
+     */
     public function __construct(
         InputParamsResolver $inputParamsResolver,
         RequestInterface $requestInterface,
@@ -50,6 +86,14 @@ class SalesOrderPaymentBeforeSavedObserver implements \Magento\Framework\Event\O
         $this->messageManager = $messageManager;
     }
 
+    /**
+     * Add or Take Coins
+     *
+     * @param Observer $observer
+     * @return $this|void
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
     public function execute(Observer $observer)
     {
         $payment = $observer->getEvent()->getPayment();
@@ -73,6 +117,14 @@ class SalesOrderPaymentBeforeSavedObserver implements \Magento\Framework\Event\O
         return $this;
     }
 
+    /**
+     * Pay with money or coins
+     *
+     * @param bool $coinsPayment
+     * @return void
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
+     */
     public function addSpendCoins(bool $coinsPayment)
     {
         // add new coins row into table
