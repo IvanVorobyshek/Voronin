@@ -61,6 +61,9 @@ class SalesOrderAfterSavedObserver implements \Magento\Framework\Event\ObserverI
         }
 
         $customerId = $order->getCustomerId();
+        if ($customerId === "" || $customerId === 0) {
+            return $this;
+        }
         $orderId = $order->getEntityId();
         $this->collection->addFieldToSelect(['entity_id']);
         $this->collection->addFieldToFilter('customer_id', ['eq' => $customerId]);

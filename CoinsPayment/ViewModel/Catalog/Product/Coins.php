@@ -5,6 +5,7 @@ namespace Voronin\CoinsPayment\ViewModel\Catalog\Product;
 use Magento\Framework\View\Element\Block\ArgumentInterface;
 use Magento\Catalog\Block\Product\View;
 use Voronin\CoinsPayment\Model\Config;
+use Magento\Checkout\Model\Session;
 
 class Coins implements ArgumentInterface
 {
@@ -12,6 +13,8 @@ class Coins implements ArgumentInterface
      * @var View
      */
     private View $view;
+
+    private Session $session;
 
     /**
      * @var Config
@@ -24,8 +27,10 @@ class Coins implements ArgumentInterface
      */
     public function __construct(
         View $view,
+        Session $session,
         Config $config
     ) {
+        $this->session = $session;
         $this->view = $view;
         $this->config = $config;
     }
@@ -37,7 +42,8 @@ class Coins implements ArgumentInterface
      */
     public function showPercentOfPurchase(): string|null
     {
-        if ($this->config->isMessageToShow()) {
+        $customerId = (int)$this->session->getQuote()->getCustomerId();
+        if ($this->config->isMessageToShow() & $customerId !== 0) {
             return __('You will receive %1 coins for purchasing this product', $this->getPercentOfPurchase());
         }
         return null;

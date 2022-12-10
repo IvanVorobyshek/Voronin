@@ -3,12 +3,10 @@
 namespace Voronin\CoinsPayment\Observer;
 
 use Magento\Checkout\Model\Session;
-use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Message\ManagerInterface;
-use Magento\Webapi\Controller\Rest\InputParamsResolver;
 use Voronin\CoinsPayment\Api\CoinsRepositoryInterface;
 use Voronin\CoinsPayment\Model\CoinsFactory;
 use Voronin\CoinsPayment\Model\Config;
@@ -16,15 +14,6 @@ use Voronin\CoinsPayment\ViewModel\Catalog\Product\Coins;
 
 class SalesOrderPaymentBeforeSavedObserver implements \Magento\Framework\Event\ObserverInterface
 {
-    /**
-     * @var InputParamsResolver
-     */
-    protected $inputParamsResolver;
-
-    /**
-     * @var RequestInterface
-     */
-    protected $requestInterface;
 
     /**
      * @var Session
@@ -57,8 +46,6 @@ class SalesOrderPaymentBeforeSavedObserver implements \Magento\Framework\Event\O
     private ManagerInterface $messageManager;
 
     /**
-     * @param InputParamsResolver $inputParamsResolver
-     * @param RequestInterface $requestInterface
      * @param Session $session
      * @param Coins $coins
      * @param Config $config
@@ -67,8 +54,6 @@ class SalesOrderPaymentBeforeSavedObserver implements \Magento\Framework\Event\O
      * @param CoinsRepositoryInterface $coinsRepository
      */
     public function __construct(
-        InputParamsResolver $inputParamsResolver,
-        RequestInterface $requestInterface,
         Session $session,
         Coins $coins,
         Config $config,
@@ -76,8 +61,6 @@ class SalesOrderPaymentBeforeSavedObserver implements \Magento\Framework\Event\O
         ManagerInterface $messageManager,
         CoinsRepositoryInterface $coinsRepository
     ) {
-        $this->inputParamsResolver = $inputParamsResolver;
-        $this->requestInterface = $requestInterface;
         $this->session = $session;
         $this->coins = $coins;
         $this->coinsFactory = $coinsFactory;
@@ -134,6 +117,10 @@ class SalesOrderPaymentBeforeSavedObserver implements \Magento\Framework\Event\O
 
         //get customer id
         $customerId = (int)$quote->getCustomerId();
+        if ($customerId === 0) {
+            return;
+        }
+
         //get order id
         $orderId = $quote->getReservedOrderId();
         //        if ($totalPrice < 0) return $this;
