@@ -14,6 +14,9 @@ class Coins implements ArgumentInterface
      */
     private View $view;
 
+    /**
+     * @var Session
+     */
     private Session $session;
 
     /**
@@ -23,6 +26,7 @@ class Coins implements ArgumentInterface
 
     /**
      * @param View $view
+     * @param Session $session
      * @param Config $config
      */
     public function __construct(
