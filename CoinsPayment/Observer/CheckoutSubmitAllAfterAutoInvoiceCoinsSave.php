@@ -3,17 +3,34 @@
 namespace Voronin\CoinsPayment\Observer;
 
 use Magento\Checkout\Model\Session;
+use Magento\Framework\DB\Transaction;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Message\ManagerInterface;
+use Magento\Sales\Model\Order\Email\Sender\InvoiceSender;
+use Magento\Sales\Model\Service\InvoiceService;
 use Voronin\CoinsPayment\Api\CoinsRepositoryInterface;
 use Voronin\CoinsPayment\Model\CoinsFactory;
 use Voronin\CoinsPayment\Model\Config;
 use Voronin\CoinsPayment\ViewModel\Catalog\Product\Coins;
 
-class SalesOrderPaymentBeforeSavedObserver implements \Magento\Framework\Event\ObserverInterface
+class CheckoutSubmitAllAfterAutoInvoiceCoinsSave implements \Magento\Framework\Event\ObserverInterface
 {
+    /**
+     * @var InvoiceService
+     */
+    private InvoiceService $invoiceService;
+
+    /**
+     * @var Transaction
+     */
+    private Transaction $transaction;
+
+    /**
+     * @var InvoiceSender
+     */
+    private InvoiceSender $invoiceSender;
 
     /**
      * @var Session
@@ -46,62 +63,85 @@ class SalesOrderPaymentBeforeSavedObserver implements \Magento\Framework\Event\O
     private ManagerInterface $messageManager;
 
     /**
+     * @param InvoiceService $invoiceService
+     * @param InvoiceSender $invoiceSender
+     * @param Transaction $transaction
      * @param Session $session
      * @param Coins $coins
      * @param Config $config
      * @param CoinsFactory $coinsFactory
-     * @param ManagerInterface $messageManager
      * @param CoinsRepositoryInterface $coinsRepository
+     * @param ManagerInterface $messageManager
      */
     public function __construct(
+        InvoiceService $invoiceService,
+        InvoiceSender $invoiceSender,
+        Transaction $transaction,
         Session $session,
         Coins $coins,
         Config $config,
         CoinsFactory $coinsFactory,
-        ManagerInterface $messageManager,
-        CoinsRepositoryInterface $coinsRepository
+        CoinsRepositoryInterface $coinsRepository,
+        ManagerInterface $messageManager
     ) {
+        $this->messageManager = $messageManager;
+        $this->invoiceService = $invoiceService;
+        $this->transaction = $transaction;
+        $this->invoiceSender = $invoiceSender;
+
         $this->session = $session;
         $this->coins = $coins;
         $this->coinsFactory = $coinsFactory;
         $this->coinsRepository = $coinsRepository;
         $this->config = $config;
-        $this->messageManager = $messageManager;
     }
 
     /**
-     * Add or Take Coins
+     * Save coins, make autoinvoice
      *
      * @param Observer $observer
      * @return $this|void
      * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function execute(Observer $observer)
     {
-        $payment = $observer->getEvent()->getPayment();
-        if (empty($payment)) {
-            return $this;
-        }
-        //check, if this is the first saving of payment
-        $first = $this->session->getQuote()->getBaseSubtotal();
-        if ($first === null) {
-            return $this;
-        }
+        $order = $observer->getEvent()->getOrder();
+        $state = $order->getState();
+        $paymentMethod = $order->getPayment()->getMethod();
 
-        //add data
-        if ($payment->getMethod() === 'coinspayment') {
+        if ($paymentMethod === 'coinspayment') {//coins spent
             $this->addSpendCoins(true);
         } else {
-            if ($this->config->isEnabled()) {
+            if ($this->config->isEnabled()) {//coins receive
                 $this->addSpendCoins(false);
+            }
+        }
+
+        if ($paymentMethod === "coinspayment" && $state === "new") {
+            //make autoinvoice
+            if ($order->canInvoice()) {
+                $invoice = $this->invoiceService->prepareInvoice($order);
+                $invoice->setRequestedCaptureCase(\Magento\Sales\Model\Order\Invoice::CAPTURE_OFFLINE);
+                $invoice->register();
+                $invoice->getOrder()->setCustomerNoteNotify(false);
+                $invoice->getOrder()->setIsInProcess(true);
+                $order->addStatusHistoryComment(__('Automatically invoiced'), false);
+                $transactionSave =
+                    $this->transaction
+                        ->addObject($invoice)
+                        ->addObject($invoice->getOrder());
+                $transactionSave->save();
+                $this->invoiceSender->send($invoice);
+                $order->addCommentToStatusHistory(
+                    __('Notified customer about invoice creation #%1.', $invoice->getId())
+                )->setIsCustomerNotified(true)->save();
             }
         }
         return $this;
     }
 
     /**
-     * Pay with money or coins
+     * Add a row with coins data to the table
      *
      * @param bool $coinsPayment
      * @return void
@@ -123,9 +163,6 @@ class SalesOrderPaymentBeforeSavedObserver implements \Magento\Framework\Event\O
 
         //get order id
         $orderId = $quote->getReservedOrderId();
-        //        if ($totalPrice < 0) return $this;
-        //        if (empty($customerId) or $customerId == '') return $this;
-        //        if (empty($orderId) or $orderId == '') return $this;
         //we spend or earn coins
         if ($coinsPayment) {//pay with coins for purchase and shipment
             // Base_cart_total

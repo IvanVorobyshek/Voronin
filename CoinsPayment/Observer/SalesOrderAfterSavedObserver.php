@@ -49,13 +49,13 @@ class SalesOrderAfterSavedObserver implements \Magento\Framework\Event\ObserverI
     public function execute(Observer $observer)
     {
         $order = $observer->getEvent()->getOrder();
+        $state = $order->getState();
         $paymentMethod = $order->getPayment()->getMethod();
         //if payment method === coinspayment - it's already is_completed = 1
         if ($paymentMethod === "coinspayment") {
             return $this;
         }
 
-        $state = $order->getState();
         if ($state !== "complete") {
             return $this;
         }

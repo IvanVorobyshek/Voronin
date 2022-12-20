@@ -1,13 +1,15 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
-    <event name="sales_order_payment_save_before">
-        <observer name="voronin_coins_payment_before_save_order_payment" instance="Voronin\CoinsPayment\Observer\SalesOrderPaymentBeforeSavedObserver" />
-    </event>
+
     <event name="sales_order_save_after">
         <observer name="voronin_coins_payment_after_save_order" instance="Voronin\CoinsPayment\Observer\SalesOrderAfterSavedObserver" />
     </event>
 
     <event name="payment_method_is_active">
         <observer name="disable_coins_payment" instance="Voronin\CoinsPayment\Observer\CoinsPaymentMethodDisable" />
+    </event>
+
+    <event name="checkout_submit_all_after">
+        <observer name="voronin_coins_payment_auto_invoice_coins_save" instance="Voronin\CoinsPayment\Observer\CheckoutSubmitAllAfterAutoInvoiceCoinsSave" />
     </event>
 </config>

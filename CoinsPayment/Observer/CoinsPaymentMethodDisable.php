@@ -36,7 +36,7 @@ class CoinsPaymentMethodDisable implements ObserverInterface
     {
         $customerId = (int)$this->session->getQuote()->getCustomerId();
         if ($customerId === 0) {
-            if ($observer->getEvent()->getMethodInstance()->getCode() == "coinspayment") {
+            if ($observer->getEvent()->getMethodInstance()->getCode() === "coinspayment") {
                 $checkResult = $observer->getEvent()->getResult();
                 $checkResult->setData('is_available', false);
             }
