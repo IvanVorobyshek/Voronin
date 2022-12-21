@@ -109,6 +109,7 @@ class CheckoutSubmitAllAfterAutoInvoiceCoinsSave implements \Magento\Framework\E
         $state = $order->getState();
         $paymentMethod = $order->getPayment()->getMethod();
 
+        //add or spend coins
         if ($paymentMethod === 'coinspayment') {//coins spent
             $this->addSpendCoins(true);
         } else {
@@ -117,13 +118,13 @@ class CheckoutSubmitAllAfterAutoInvoiceCoinsSave implements \Magento\Framework\E
             }
         }
 
+        //make autoinvoice
         if ($paymentMethod === "coinspayment" && $state === "new") {
-            //make autoinvoice
             if ($order->canInvoice()) {
                 $invoice = $this->invoiceService->prepareInvoice($order);
                 $invoice->setRequestedCaptureCase(\Magento\Sales\Model\Order\Invoice::CAPTURE_OFFLINE);
                 $invoice->register();
-                $invoice->getOrder()->setCustomerNoteNotify(false);
+                $invoice->getOrder()->setCustomerNoteNotify(true);
                 $invoice->getOrder()->setIsInProcess(true);
                 $order->addStatusHistoryComment(__('Automatically invoiced'), false);
                 $transactionSave =
