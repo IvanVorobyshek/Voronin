@@ -14,6 +14,7 @@ class Collection extends SearchResult
     protected function _initSelect()
     {
         $this->addFilterToMap('car_id', 'main_table.car_id');
+        // $this->addFieldToFilter('car_model','s');
         parent::_initSelect();
     }
 }

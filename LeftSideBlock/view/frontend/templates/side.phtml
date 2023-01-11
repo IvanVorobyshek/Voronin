@@ -1,0 +1,26 @@
+<?php
+/** @var \Voronin\LeftSideBlock\Block\Template $block */
+//$attrs = $block->getAttrs();
+
+?>
+
+<div class="template">
+   <p> <?= $block->escapeHtml(__('Maybe it will interest you:')) ?></p>
+      <?php
+         $productCollection = $block->getProductCollection();
+        foreach ($productCollection as $product): ?>
+            <div class='divproduct-leftsideblock'>
+            <div class='divimg-leftsideblock'>
+               <a href="<?= $block->escapeUrl($product->getProductUrl()) ?>">
+                  <img class='img-leftsideblock' src="<?= $block->escapeUrl($block->getImageUrl($product)) ?>" />
+               </a>
+            </div>
+            <div class='divprice-leftsideblock'>
+               <a href="<?= $block->escapeUrl($product->getProductUrl()) ?> ">
+                  <?= $block->escapeHtml($product->getName()) ?>
+               </a>
+               <p> <?= $block->escapeHtml($block->getPriceWithCurrency($product->getPrice())) ?> </p>
+            </div>
+         </div>
+   <?php endforeach; ?>
+</div>

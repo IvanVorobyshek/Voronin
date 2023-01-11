@@ -1,0 +1,100 @@
+//----------
+
+interface ShapeInterface {
+    public function area();
+}
+
+class SumCalculatorOutputter
+{
+    public $calculator;
+
+    public function __construct(AreaCalculator $calculator)
+    {
+        $this->calculator = $calculator;
+    }
+
+    public function JSON()
+    {
+        $data = [
+            'sum' => $this->calculator->sum(),
+        ];
+        return json_encode($data);
+    }
+
+    public function HTML()
+    {
+        return implode('', [
+            '',
+            'Sum of the areas of provided shapes: ',
+            $this->calculator->sum(),
+            '',
+        ]);
+        return 32;
+    }
+}
+
+class Circle implements ShapeInterface
+{
+    private float $radius;
+
+    public function __construct($radius)
+    {
+        $this->radius = $radius;
+    }
+
+    public function area()
+    {
+        return pi() * pow($this->radius, 2);
+    }
+}
+
+class Square implements ShapeInterface
+{
+    private float $length;
+
+    public function __construct($length)
+    {
+        $this->length = $length;
+    }
+
+    public function area(){
+        return pow($this->length, 2);
+    }
+}
+
+class AreaCalculator {
+    protected $shapes;
+
+    public function __construct($shapes = [])
+    {
+        $this->shapes = $shapes;
+    }
+
+    public function sum()
+    {
+        foreach($this->shapes as $shape) {
+            if (is_a($shape, 'ShapeInterface'))
+            {
+                $area[] = $shape->area();
+            }
+        }
+        return array_sum($area);
+    }
+}
+
+$shapes = [
+//    new Circle(2),
+    new Square (3),
+    new Square (5),
+];
+
+$areas = new AreaCalculator($shapes);
+$sq = $areas->sum();
+echo $sq;
+echo '<br>';
+$e = new SumCalculatorOutputter($areas);
+var_dump($e->HTML());
+echo '<br>';
+var_dump($e->JSON());
+$r = 'asdasd0';
+echo '<br>';
